@@ -29,6 +29,7 @@ from gui.backtest import BacktestTab
 from gui.broker import BrokerTab
 from gui.personalization import PersonalizationTab
 from gui.screener import ScreenerTab
+from gui.technical_analysis import TechnicalAnalysisTab
 from utils.database import Database
 from utils.cache import CacheManager
 
@@ -67,10 +68,12 @@ class StockAdvisorApp(QMainWindow):
         self.broker_tab = BrokerTab(self.db, self.cache)
         self.personalization_tab = PersonalizationTab()
         self.screener_tab = ScreenerTab()
+        self.technical_tab = TechnicalAnalysisTab()
         
         self.tabs.addTab(self.dashboard_tab, "📊 Dashboard")
         self.tabs.addTab(self.search_tab, "🔍 Stock Search")
         self.tabs.addTab(self.analysis_tab, "📈 Analysis")
+        self.tabs.addTab(self.technical_tab, "🔬 Technical")
         self.tabs.addTab(self.chatbot_tab, "💬 ChatBot")
         self.tabs.addTab(self.alerts_tab, "🔔 Alerts")
         self.tabs.addTab(self.portfolio_tab, "💼 Portfolio")
