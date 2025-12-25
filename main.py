@@ -25,6 +25,7 @@ from gui.chatbot import ChatbotTab
 from gui.alerts import AlertsTab
 from gui.portfolio import PortfolioTab
 from gui.options import OptionsTab
+from gui.backtest import BacktestTab
 from utils.database import Database
 from utils.cache import CacheManager
 
@@ -59,6 +60,7 @@ class StockAdvisorApp(QMainWindow):
         self.alerts_tab = AlertsTab(self.db, self.cache)
         self.portfolio_tab = PortfolioTab(self.db, self.cache)
         self.options_tab = OptionsTab(self.db, self.cache)
+        self.backtest_tab = BacktestTab(self.db, self.cache)
         
         self.tabs.addTab(self.dashboard_tab, "📊 Dashboard")
         self.tabs.addTab(self.search_tab, "🔍 Stock Search")
@@ -67,6 +69,7 @@ class StockAdvisorApp(QMainWindow):
         self.tabs.addTab(self.alerts_tab, "🔔 Alerts")
         self.tabs.addTab(self.portfolio_tab, "💼 Portfolio")
         self.tabs.addTab(self.options_tab, "📊 Options")
+        self.tabs.addTab(self.backtest_tab, "🚀 Backtest")
         self.tabs.addTab(self.watchlist_tab, "⭐ Watchlist")
         self.tabs.addTab(self.reports_tab, "📄 Reports")
         
