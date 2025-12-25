@@ -132,6 +132,20 @@ class StockAdvisorApp(QMainWindow):
                 border-radius: 6px;
             }
         """)
+    
+    def closeEvent(self, event):
+        """Handle window close event with proper cleanup"""
+        try:
+            # Attempt to clean up chatbot tab if it exists
+            if hasattr(self, 'chatbot_tab') and hasattr(self.chatbot_tab, 'closeEvent'):
+                try:
+                    self.chatbot_tab.closeEvent(event)
+                except:
+                    pass
+        except:
+            pass
+        
+        super().closeEvent(event)
 
 
 def main():

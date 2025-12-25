@@ -174,15 +174,21 @@ class DashboardTab(QWidget):
             # Update market labels
             self._update_market_labels(indices)
             
-            # Load watchlist
-            if self.db:
-                watchlist = self.db.get_watchlist()
-                self._update_watchlist_table(watchlist if watchlist else [])
+            # Load watchlist (if available)
+            try:
+                if self.db and hasattr(self.db, 'get_watchlist'):
+                    watchlist = self.db.get_watchlist()
+                    self._update_watchlist_table(watchlist if watchlist else [])
+            except Exception as e:
+                logger.warning(f"Could not load watchlist: {e}")
             
-            # Load recent analysis
-            if self.db:
-                analysis = self.db.get_recent_analysis(limit=5)
-                self._update_analysis_table(analysis if analysis else [])
+            # Load recent analysis (if available)
+            try:
+                if self.db and hasattr(self.db, 'get_recent_analysis'):
+                    analysis = self.db.get_recent_analysis(limit=5)
+                    self._update_analysis_table(analysis if analysis else [])
+            except Exception as e:
+                logger.warning(f"Could not load analysis: {e}")
             
             self.status_label.setText("✓ Dashboard updated")
             

@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (
     QLabel, QScrollArea, QFrame, QApplication
 )
 from PySide6.QtCore import Qt, QThread, Signal, QTimer
-from PySide6.QtGui import QFont, QColor, QTextCursor
+from PySide6.QtGui import QFont, QColor, QTextCursor, QTextOption
 from services.chatbot_service import StockChatbot, ChatbotWorker
 import logging
 
@@ -26,7 +26,7 @@ class ChatMessage(QFrame):
         content = QTextEdit()
         content.setReadOnly(True)
         content.setPlainText(message)
-        content.setWordWrapMode(3)  # WrapAtWordBoundary
+        content.setWordWrapMode(QTextOption.WrapMode.WordWrap)  # Proper enum
         
         # Style based on sender
         if is_bot:
@@ -171,9 +171,14 @@ class ChatbotTab(QWidget):
         self.worker.moveToThread(self.worker_thread)
         self.worker.response_ready.connect(self.on_response_received)
         self.worker.error_occurred.connect(self.on_error)
+        self.worker_thread.finished.connect(self.worker.deleteLater)  # Clean up worker
         self.worker_thread.start()
         
-        # Initial greeting
+        # Initial greeting (add after worker thread is setup)
+        QTimer.singleShot(100, self._show_greeting)
+    
+    def _show_greeting(self):
+        """Show initial greeting message"""
         self.add_bot_message("👋 Hello! I'm your Stock Advisor ChatBot. Ask me anything about stocks, portfolios, market trends, and investment strategies!")
     
     def handle_key_press(self, event):
@@ -246,6 +251,20 @@ class ChatbotTab(QWidget):
     
     def closeEvent(self, event):
         """Cleanup thread on close"""
-        self.worker_thread.quit()
-        self.worker_thread.wait()
+        try:
+            if hasattr(self, 'worker_thread') and self.worker_thread.isRunning():
+                self.worker_thread.quit()
+                self.worker_thread.wait(3000)  # Wait up to 3 seconds
+        except Exception as e:
+            logger.error(f"Error cleaning up worker thread: {e}")
+        
         super().closeEvent(event)
+    
+    def __del__(self):
+        """Destructor - final cleanup"""
+        try:
+            if hasattr(self, 'worker_thread') and self.worker_thread.isRunning():
+                self.worker_thread.quit()
+                self.worker_thread.wait(1000)
+        except:
+            pass
