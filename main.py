@@ -30,6 +30,7 @@ from gui.broker import BrokerTab
 from gui.personalization import PersonalizationTab
 from gui.screener import ScreenerTab
 from gui.technical_analysis import TechnicalAnalysisTab
+from gui.dividend_tracker import DividendTrackerTab
 from utils.database import Database
 from utils.cache import CacheManager
 
@@ -69,6 +70,7 @@ class StockAdvisorApp(QMainWindow):
         self.personalization_tab = PersonalizationTab()
         self.screener_tab = ScreenerTab()
         self.technical_tab = TechnicalAnalysisTab()
+        self.dividend_tab = DividendTrackerTab()
         
         self.tabs.addTab(self.dashboard_tab, "📊 Dashboard")
         self.tabs.addTab(self.search_tab, "🔍 Stock Search")
@@ -77,6 +79,7 @@ class StockAdvisorApp(QMainWindow):
         self.tabs.addTab(self.chatbot_tab, "💬 ChatBot")
         self.tabs.addTab(self.alerts_tab, "🔔 Alerts")
         self.tabs.addTab(self.portfolio_tab, "💼 Portfolio")
+        self.tabs.addTab(self.dividend_tab, "💰 Dividends")
         self.tabs.addTab(self.options_tab, "📊 Options")
         self.tabs.addTab(self.backtest_tab, "🚀 Backtest")
         self.tabs.addTab(self.broker_tab, "🏦 Broker")
