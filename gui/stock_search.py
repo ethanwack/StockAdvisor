@@ -1,11 +1,11 @@
 """Stock search tab - Find and research stocks"""
 
-from PyQt6.QtWidgets import (
+from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton,
     QTableWidget, QTableWidgetItem, QComboBox, QSpinBox
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal
-from PyQt6.QtGui import QFont, QColor
+from PySide6.QtCore import Qt, QThread, Signal
+from PySide6.QtGui import QFont, QColor
 from scrapers.stock_scraper import StockScraper
 
 

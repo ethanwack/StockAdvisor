@@ -6,15 +6,15 @@ Professional stock research and analysis tool inspired by Motley Fool
 
 import sys
 import os
-from PyQt6.QtWidgets import (
+from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QTabWidget, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem,
     QProgressBar, QMessageBox, QStatusBar, QSplitter, QTextEdit
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTimer
-from PyQt6.QtGui import QFont, QColor, QIcon
-from PyQt6.QtCharts import QChart, QChartView, QLineSeries
-from PyQt6.QtCore import QDateTime
+from PySide6.QtCore import Qt, QThread, Signal, QTimer
+from PySide6.QtGui import QFont, QColor, QIcon
+from PySide6.QtCharts import QChart, QChartView, QLineSeries
+from PySide6.QtCore import QDateTime
 
 from gui.dashboard import DashboardTab
 from gui.stock_search import StockSearchTab

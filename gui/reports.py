@@ -1,11 +1,11 @@
 """Reports tab - Generate and view analysis reports"""
 
-from PyQt6.QtWidgets import (
+from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QTableWidget, QTableWidgetItem, QComboBox, QTextEdit
 )
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
 from utils.report_generator import ReportGenerator
 
 

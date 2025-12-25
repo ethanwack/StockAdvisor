@@ -1,11 +1,11 @@
 """Dashboard tab - Overview of market and watchlist"""
 
-from PyQt6.QtWidgets import (
+from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QTableWidget, QTableWidgetItem, QGridLayout
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal
-from PyQt6.QtGui import QFont, QColor
+from PySide6.QtCore import Qt, QThread, Signal
+from PySide6.QtGui import QFont, QColor
 from scrapers.market_scraper import MarketScraper
 from utils.formatters import format_currency, format_percent
 

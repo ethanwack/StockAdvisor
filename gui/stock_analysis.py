@@ -1,11 +1,11 @@
 """Stock analysis tab - Detailed analysis and recommendations"""
 
-from PyQt6.QtWidgets import (
+from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton,
     QTextEdit, QTableWidget, QTableWidgetItem, QScrollArea
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal
-from PyQt6.QtGui import QFont, QColor
+from PySide6.QtCore import Qt, QThread, Signal
+from PySide6.QtGui import QFont, QColor
 from scrapers.stock_scraper import StockScraper
 from analyzers.fundamental_analyzer import FundamentalAnalyzer
 
