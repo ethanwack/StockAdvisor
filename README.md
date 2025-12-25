@@ -8,6 +8,7 @@ A professional stock research and analysis tool inspired by Motley Fool, featuri
 - 📊 **Dashboard** - Market overview with indices and watchlist summary
 - 🔍 **Stock Search** - Find and filter stocks by valuation metrics
 - 📈 **Deep Analysis** - Fundamental analysis with quality scoring
+- 💬 **ChatBot** - AI-powered investment advisor and stock recommendation engine
 - ⭐ **Watchlist** - Track favorite stocks with notes and targets
 - 📄 **Reports** - Generate PDF/HTML analysis reports
 
@@ -20,16 +21,26 @@ A professional stock research and analysis tool inspired by Motley Fool, featuri
 - News and sentiment tracking
 - Historical price analysis
 
+🤖 **ChatBot Features:**
+- Stock recommendations and analysis
+- Buy/sell signal strategies
+- Shorting guidance and risk warnings
+- Portfolio management advice
+- Market analysis and trends
+- Risk management techniques
+- Works in rule-based mode or with OpenAI API for enhanced responses
+
 ## Project Structure
 
 ```
 StockAdvisor/
 ├── main.py                 # Application entry point
 ├── requirements.txt        # Python dependencies
-├── gui/                    # PyQt6 GUI components
-│   ├── dashboard.py       # Dashboard tab
+├── gui/                    # PySide6 GUI components
+│   ├── dashboard.py       # Dashboard tab (with fallback data)
 │   ├── stock_search.py    # Stock search tab
 │   ├── stock_analysis.py  # Analysis tab
+│   ├── chatbot.py         # ChatBot tab (NEW!)
 │   ├── watchlist.py       # Watchlist tab
 │   └── reports.py         # Reports tab
 ├── scrapers/              # Web scraping modules
@@ -37,6 +48,11 @@ StockAdvisor/
 │   └── market_scraper.py  # Market indices scraper
 ├── analyzers/             # Financial analysis modules
 │   └── fundamental_analyzer.py  # Fundamental analysis engine
+├── services/              # Service modules
+│   ├── portfolio_service.py
+│   ├── recommendation_service.py
+│   ├── stock_service.py
+│   └── chatbot_service.py # ChatBot AI engine (NEW!)
 └── utils/                 # Utility modules
     ├── database.py        # SQLite database management
     ├── cache.py           # Data caching

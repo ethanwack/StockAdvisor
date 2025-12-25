@@ -21,6 +21,7 @@ from gui.stock_search import StockSearchTab
 from gui.stock_analysis import StockAnalysisTab
 from gui.watchlist import WatchlistTab
 from gui.reports import ReportsTab
+from gui.chatbot import ChatbotTab
 from utils.database import Database
 from utils.cache import CacheManager
 
@@ -51,10 +52,12 @@ class StockAdvisorApp(QMainWindow):
         self.analysis_tab = StockAnalysisTab(self.db, self.cache)
         self.watchlist_tab = WatchlistTab(self.db, self.cache)
         self.reports_tab = ReportsTab(self.db, self.cache)
+        self.chatbot_tab = ChatbotTab(self.db, self.cache)
         
         self.tabs.addTab(self.dashboard_tab, "📊 Dashboard")
         self.tabs.addTab(self.search_tab, "🔍 Stock Search")
         self.tabs.addTab(self.analysis_tab, "📈 Analysis")
+        self.tabs.addTab(self.chatbot_tab, "💬 ChatBot")
         self.tabs.addTab(self.watchlist_tab, "⭐ Watchlist")
         self.tabs.addTab(self.reports_tab, "📄 Reports")
         
