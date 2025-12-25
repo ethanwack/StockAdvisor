@@ -136,7 +136,7 @@ class BrokerTab(QWidget):
         tabs.addTab(self._create_account_tab(), "💼 Account")
         tabs.addTab(self._create_positions_tab(), "📊 Positions")
         tabs.addTab(self._create_orders_tab(), "📋 Orders")
-        tabs.addTab(self._create_trading_tab(), "💹 Trade")
+        tabs.addTab(self._create_trading_tab(), "� Recommendations")
         
         layout.addWidget(tabs)
         self.setLayout(layout)
@@ -311,73 +311,90 @@ class BrokerTab(QWidget):
         return widget
     
     def _create_trading_tab(self) -> QWidget:
-        """Create trading/order placement tab"""
+        """Create trading recommendations tab"""
         widget = QWidget()
         layout = QVBoxLayout()
         
-        # Order input section
-        order_group = QGroupBox("Place Order")
-        order_layout = QFormLayout()
+        # Warning notice
+        warning_group = QGroupBox("⚠️ Important Notice")
+        warning_layout = QVBoxLayout()
+        
+        warning_label = QLabel(
+            "This tab displays RECOMMENDATIONS ONLY.\n\n"
+            "To execute trades, please use your brokerage app directly:\n"
+            "• Alpaca: Use Alpaca app or website\n"
+            "• TD Ameritrade: Use thinkorswim or TD website\n"
+            "• Interactive Brokers: Use TWS platform\n\n"
+            "This tool does NOT execute trades directly."
+        )
+        warning_label.setStyleSheet("color: #FF9800; font-weight: bold;")
+        warning_label.setWordWrap(True)
+        warning_layout.addWidget(warning_label)
+        warning_group.setLayout(warning_layout)
+        layout.addWidget(warning_group)
+        
+        # Recommendation input section
+        rec_group = QGroupBox("Trade Recommendations")
+        rec_layout = QFormLayout()
         
         # Symbol
         self.trade_symbol = QLineEdit()
         self.trade_symbol.setPlaceholderText("e.g., AAPL")
         self.trade_symbol.setText("AAPL")
-        order_layout.addRow("Symbol:", self.trade_symbol)
+        rec_layout.addRow("Symbol:", self.trade_symbol)
         
-        # Side
-        self.trade_side = QComboBox()
-        self.trade_side.addItems(["BUY", "SELL"])
-        order_layout.addRow("Side:", self.trade_side)
+        # Action
+        self.trade_action = QComboBox()
+        self.trade_action.addItems(["BUY", "SELL", "HOLD"])
+        rec_layout.addRow("Recommended Action:", self.trade_action)
         
         # Quantity
         self.trade_quantity = QSpinBox()
         self.trade_quantity.setRange(1, 10000)
         self.trade_quantity.setValue(100)
-        order_layout.addRow("Quantity:", self.trade_quantity)
+        rec_layout.addRow("Suggested Quantity:", self.trade_quantity)
         
-        # Order type
-        self.trade_order_type = QComboBox()
-        self.trade_order_type.addItems(["MARKET", "LIMIT", "STOP", "STOP_LIMIT"])
-        self.trade_order_type.currentTextChanged.connect(self._on_order_type_changed)
-        order_layout.addRow("Order Type:", self.trade_order_type)
+        # Price target
+        self.trade_target_price = QDoubleSpinBox()
+        self.trade_target_price.setRange(0.01, 10000.0)
+        self.trade_target_price.setSingleStep(0.01)
+        self.trade_target_price.setVisible(False)
+        rec_layout.addRow("Price Target:", self.trade_target_price)
         
-        # Limit price
-        self.trade_limit_price = QDoubleSpinBox()
-        self.trade_limit_price.setRange(0.01, 10000.0)
-        self.trade_limit_price.setSingleStep(0.01)
-        self.trade_limit_price.setVisible(False)
-        order_layout.addRow("Limit Price:", self.trade_limit_price)
+        # Confidence
+        self.trade_confidence = QSpinBox()
+        self.trade_confidence.setRange(0, 100)
+        self.trade_confidence.setValue(75)
+        self.trade_confidence.setSuffix("%")
+        rec_layout.addRow("Confidence Level:", self.trade_confidence)
         
-        # Stop price
-        self.trade_stop_price = QDoubleSpinBox()
-        self.trade_stop_price.setRange(0.01, 10000.0)
-        self.trade_stop_price.setSingleStep(0.01)
-        self.trade_stop_price.setVisible(False)
-        order_layout.addRow("Stop Price:", self.trade_stop_price)
+        # Reason
+        self.trade_reason = QLineEdit()
+        self.trade_reason.setPlaceholderText("Reason for recommendation")
+        rec_layout.addRow("Reason:", self.trade_reason)
         
-        order_group.setLayout(order_layout)
-        layout.addWidget(order_group)
+        rec_group.setLayout(rec_layout)
+        layout.addWidget(rec_group)
         
-        # Place order button
-        place_btn = QPushButton("💹 Place Order")
-        place_btn.clicked.connect(self._place_order)
-        place_btn.setStyleSheet("background-color: #4CAF50; color: white; font-weight: bold; padding: 10px;")
-        layout.addWidget(place_btn)
+        # Copy recommendation button
+        copy_btn = QPushButton("� Copy Recommendation")
+        copy_btn.clicked.connect(self._copy_recommendation)
+        copy_btn.setStyleSheet("background-color: #2196F3; color: white; font-weight: bold; padding: 10px;")
+        layout.addWidget(copy_btn)
         
-        # Order confirmation
-        self.order_confirm_text = QTextEdit()
-        self.order_confirm_text.setReadOnly(True)
-        self.order_confirm_text.setMaximumHeight(150)
-        self.order_confirm_text.setStyleSheet("""
+        # Recommendation display
+        self.rec_display_text = QTextEdit()
+        self.rec_display_text.setReadOnly(True)
+        self.rec_display_text.setStyleSheet("""
             QTextEdit {
                 background-color: #f5f5f5;
                 border: 1px solid #ddd;
                 border-radius: 4px;
                 padding: 10px;
+                font-family: 'Courier New', monospace;
             }
         """)
-        layout.addWidget(self.order_confirm_text)
+        layout.addWidget(self.rec_display_text)
         
         layout.addStretch()
         widget.setLayout(layout)
@@ -550,69 +567,30 @@ class BrokerTab(QWidget):
         else:
             QMessageBox.critical(self, "Error", "Failed to cancel order")
     
-    def _on_order_type_changed(self):
-        """Handle order type change"""
-        order_type = self.trade_order_type.currentText()
+    def _copy_recommendation(self):
+        """Copy recommendation to clipboard"""
+        from PySide6.QtWidgets import QApplication
         
-        self.trade_limit_price.setVisible(order_type in ["LIMIT", "STOP_LIMIT"])
-        self.trade_stop_price.setVisible(order_type in ["STOP", "STOP_LIMIT"])
-    
-    def _place_order(self):
-        """Place an order"""
         symbol = self.trade_symbol.text().upper()
-        side = OrderSide.BUY if self.trade_side.currentText() == "BUY" else OrderSide.SELL
+        action = self.trade_action.currentText()
         quantity = self.trade_quantity.value()
-        order_type_str = self.trade_order_type.currentText()
+        confidence = self.trade_confidence.value()
+        reason = self.trade_reason.text()
         
-        if not symbol:
-            QMessageBox.warning(self, "Error", "Please enter a symbol")
-            return
-        
-        try:
-            order_type = OrderType[order_type_str.upper().replace("_", "")]
-        except KeyError:
-            QMessageBox.warning(self, "Error", "Invalid order type")
-            return
-        
-        limit_price = self.trade_limit_price.value() if self.trade_limit_price.isVisible() else None
-        stop_price = self.trade_stop_price.value() if self.trade_stop_price.isVisible() else None
-        
-        # Confirmation
-        confirm_text = f"""
-ORDER CONFIRMATION:
+        recommendation = f"""
+TRADE RECOMMENDATION:
+Symbol:      {symbol}
+Action:      {action}
+Quantity:    {quantity}
+Confidence:  {confidence}%
+Reason:      {reason}
 
-Symbol:       {symbol}
-Side:         {side.value.upper()}
-Quantity:     {quantity}
-Order Type:   {order_type.value}
+⚠️  This is a recommendation only.
+Execute through your brokerage app.
 """
         
-        if limit_price:
-            confirm_text += f"Limit Price:  ${limit_price:.2f}\n"
-        if stop_price:
-            confirm_text += f"Stop Price:   ${stop_price:.2f}\n"
+        QApplication.clipboard().setText(recommendation)
         
-        self.order_confirm_text.setText(confirm_text)
-        
-        # Place order
-        try:
-            order = self.manager.place_order(
-                symbol=symbol,
-                quantity=quantity,
-                side=side,
-                order_type=order_type,
-                limit_price=limit_price,
-                stop_price=stop_price
-            )
-            
-            if order:
-                QMessageBox.information(
-                    self, "Success",
-                    f"Order placed!\nOrder ID: {order.order_id}\nStatus: {order.status.value}"
-                )
-                self._refresh_orders()
-            else:
-                QMessageBox.critical(self, "Error", "Failed to place order")
-        
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"Order placement failed: {str(e)}")
+        self.rec_display_text.setText(recommendation)
+        QMessageBox.information(self, "Copied", "Recommendation copied to clipboard!")
+
