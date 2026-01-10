@@ -24,7 +24,7 @@ python3 main.py
 
 | **You are...** | **Do this** |
 |---|---|
-| **Never used a terminal before** | 👉 [START HERE: Beginner Guide](./GETTING_STARTED.md) (has screenshots) |
+| **Never used a terminal before** | 👉 [START HERE: Beginner Guide](./GETTING_STARTED.md) (step-by-step) |
 | **Know how to use terminal** | ☝️ Copy the 3 commands above & run them |
 | **Developer/Advanced** | See "For Developers" section below |
 
@@ -35,13 +35,13 @@ python3 main.py
 ### ⚠️ NEW TO COMPUTERS/TERMINALS? 
 **→ [READ THIS FIRST: Complete Beginner Guide](./GETTING_STARTED.md)**
 
-This guide has screenshots and walks you through:
-- ✅ How to download the code (3 methods explained with pictures)
+This guide walks you through:
+- ✅ How to download the code (3 methods explained)
 - ✅ How to install Python (step-by-step for Mac/Windows/Linux)
 - ✅ How to run the program (exact steps, no guessing)
 - ✅ What to do if something goes wrong (troubleshooting)
 
-**Seriously - if you've never used a terminal, start there!**
+**Perfect for beginners with zero computer experience!**
 
 ---
 
