@@ -2,6 +2,23 @@
 
 A professional stock research and analysis tool inspired by Motley Fool, featuring web scraping capabilities and fundamental analysis.
 
+---
+
+## 🚀 Quick Start
+
+**New to this project?** Start here: **[📖 GETTING STARTED GUIDE](./GETTING_STARTED.md)**
+
+This guide walks you through:
+- ✅ Downloading the code (3 easy options)
+- ✅ Installing Python and Node.js
+- ✅ Running the desktop app
+- ✅ Running the mobile app
+- ✅ Troubleshooting common issues
+
+**Perfect for beginners with no coding experience!**
+
+---
+
 ## Features
 
 ✨ **Core Capabilities:**
