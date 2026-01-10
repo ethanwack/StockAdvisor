@@ -3,85 +3,19 @@ Strategy Backtesting Engine
 Backtest trading strategies against historical data with comprehensive performance metrics
 """
 
-from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple, Callable
-from enum import Enum
+from typing import Dict, List, Optional, Tuple
+from abc import ABC, abstractmethod
 import yfinance as yf
 import numpy as np
 import pandas as pd
-from abc import ABC, abstractmethod
+
+from utils.base_service import BaseService
+from utils.data_models import Trade, PositionType, OrderType, BacktestResults
+from utils.validators import validate_symbol, validate_date_range, ValidationError
 
 
-class OrderType(Enum):
-    """Order types"""
-    BUY = "buy"
-    SELL = "sell"
-
-
-class PositionType(Enum):
-    """Position types"""
-    LONG = "long"
-    SHORT = "short"
-
-
-@dataclass
-class Trade:
-    """Individual trade record"""
-    entry_date: datetime
-    exit_date: Optional[datetime]
-    symbol: str
-    position_type: PositionType
-    entry_price: float
-    exit_price: Optional[float] = None
-    shares: float = 100.0
-    
-    # Calculated fields
-    entry_cost: float = field(init=False)
-    exit_cost: float = field(init=False)
-    profit_loss: float = field(init=False)
-    profit_loss_pct: float = field(init=False)
-    duration_days: int = field(init=False)
-    
-    def __post_init__(self):
-        """Calculate trade metrics"""
-        self.entry_cost = self.entry_price * self.shares
-        
-        if self.exit_price is not None:
-            self.exit_cost = self.exit_price * self.shares
-            
-            if self.position_type == PositionType.LONG:
-                self.profit_loss = self.exit_cost - self.entry_cost
-            else:  # SHORT
-                self.profit_loss = self.entry_cost - self.exit_cost
-            
-            self.profit_loss_pct = (self.profit_loss / self.entry_cost * 100) if self.entry_cost > 0 else 0.0
-            
-            self.duration_days = (self.exit_date - self.entry_date).days
-        else:
-            self.exit_cost = 0.0
-            self.profit_loss = 0.0
-            self.profit_loss_pct = 0.0
-            self.duration_days = (datetime.now() - self.entry_date).days
-    
-    def to_dict(self) -> Dict:
-        """Convert trade to dictionary"""
-        return {
-            'entry_date': self.entry_date.isoformat(),
-            'exit_date': self.exit_date.isoformat() if self.exit_date else None,
-            'symbol': self.symbol,
-            'position_type': self.position_type.value,
-            'entry_price': self.entry_price,
-            'exit_price': self.exit_price,
-            'shares': self.shares,
-            'profit_loss': self.profit_loss,
-            'profit_loss_pct': self.profit_loss_pct,
-            'duration_days': self.duration_days
-        }
-
-
-@dataclass
-class BacktestResults:
+class SimpleMovingAverageCrossover:
     """Comprehensive backtest results"""
     strategy_name: str
     symbol: str

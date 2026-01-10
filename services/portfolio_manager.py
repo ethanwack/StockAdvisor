@@ -1,31 +1,13 @@
-"""Portfolio management - upload, analyze, and track holdings"""
+"""Portfolio management - refactored version using BaseService"""
 
 import csv
-import logging
 from typing import List, Dict, Optional
-from dataclasses import dataclass
 from datetime import datetime
 import yfinance as yf
 
-logger = logging.getLogger(__name__)
-
-
-@dataclass
-class Holding:
-    """Single stock holding"""
-    symbol: str
-    shares: float
-    cost_basis: float  # Cost per share
-    date_purchased: str
-    total_cost: float = 0.0  # Will be calculated
-    current_price: float = 0.0
-    current_value: float = 0.0
-    gain_loss: float = 0.0
-    gain_loss_percent: float = 0.0
-    notes: str = ""
-    
-    def __post_init__(self):
-        self.total_cost = self.shares * self.cost_basis
+from utils.base_service import BaseService
+from utils.data_models import Position
+from utils.validators import validate_symbol, ValidationError
 
 
 class Portfolio:
