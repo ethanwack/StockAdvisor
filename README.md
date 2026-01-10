@@ -4,9 +4,30 @@ A professional stock research and analysis tool inspired by Motley Fool, featuri
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Get Running in 2 Minutes)
 
-**New to this project?** Start here: **[📖 GETTING STARTED GUIDE](./GETTING_STARTED.md)**
+### Option 1: Copy-Paste & Run
+```bash
+git clone https://github.com/ethanwack/StockAdvisor.git
+cd StockAdvisor
+./run-app.sh
+```
+Then select what you want to run from the menu.
+
+### Option 2: Run Individual Components
+```bash
+# Desktop App (Python/PySide6)
+python3 main.py
+
+# Mobile App (React Native)
+cd mobile && npm start
+
+# Web Frontend (React)
+cd frontend && npm start
+```
+
+### Need Help with Setup?
+**👉 [START HERE: GETTING STARTED GUIDE](./GETTING_STARTED.md)** (Step-by-step for all platforms)
 
 This guide walks you through:
 - ✅ Downloading the code (3 easy options)
