@@ -8,6 +8,28 @@ A stock research and analysis platform inspired by Motley Fool. Analyze stocks, 
 
 ---
 
+## ⚡ QUICK INSTALL (Copy & Paste)
+
+```bash
+git clone https://github.com/ethanwack/StockAdvisor.git
+cd StockAdvisor
+python3 main.py
+```
+
+**That's it!** ☝️ Run those 3 commands in your terminal/command prompt. The app opens automatically.
+
+---
+
+## 📖 CHOOSE YOUR PATH
+
+| **You are...** | **Do this** |
+|---|---|
+| **Never used a terminal before** | 👉 [START HERE: Beginner Guide](./GETTING_STARTED.md) (has screenshots) |
+| **Know how to use terminal** | ☝️ Copy the 3 commands above & run them |
+| **Developer/Advanced** | See "For Developers" section below |
+
+---
+
 ## 🚀 Getting Started (5-10 Minutes)
 
 ### ⚠️ NEW TO COMPUTERS/TERMINALS? 
