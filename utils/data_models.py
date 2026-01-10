@@ -398,3 +398,157 @@ class ScreenerCriteria:
     def to_dict(self) -> Dict:
         """Convert to dictionary"""
         return {k: v for k, v in self.__dict__.items() if v is not None}
+
+
+# Alert-related models
+from enum import Enum
+from dataclasses import dataclass, field
+
+class AlertConditionType(Enum):
+    """Types of alert conditions"""
+    PRICE_ABOVE = "price_above"
+    PRICE_BELOW = "price_below"
+    PRICE_CHANGE_PERCENT = "price_change_percent"
+    VOLUME_SPIKE = "volume_spike"
+    RSI_OVERSOLD = "rsi_oversold"
+    RSI_OVERBOUGHT = "rsi_overbought"
+    MOVING_AVERAGE_CROSS = "moving_average_cross"
+    MACD_SIGNAL_CROSS = "macd_signal_cross"
+    EARNINGS_ANNOUNCEMENT = "earnings_announcement"
+    DIVIDEND_ANNOUNCEMENT = "dividend_announcement"
+    NEWS_KEYWORD = "news_keyword"
+    CUSTOM_SCRIPT = "custom_script"
+
+
+class LogicOperator(Enum):
+    """Logic operators for combining conditions"""
+    AND = "and"
+    OR = "or"
+
+
+class NotificationChannel(Enum):
+    """Notification delivery channels"""
+    EMAIL = "email"
+    SMS = "sms"
+    WEBHOOK = "webhook"
+    PUSH = "push"
+    IN_APP = "in_app"
+
+
+class AlertSeverity(Enum):
+    """Alert severity levels"""
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
+@dataclass
+class AlertCondition:
+    """Single alert condition"""
+    id: str
+    type: AlertConditionType
+    symbol: str
+    parameters: Dict
+    enabled: bool = True
+    created_at: datetime = field(default_factory=datetime.now)
+    
+    def to_dict(self) -> Dict:
+        """Convert to dictionary"""
+        return {
+            'id': self.id,
+            'type': self.type.value,
+            'symbol': self.symbol,
+            'parameters': self.parameters,
+            'enabled': self.enabled,
+            'created_at': self.created_at.isoformat()
+        }
+
+
+@dataclass
+class AlertTemplate:
+    """Reusable alert template"""
+    id: str
+    name: str
+    description: str
+    conditions: List[AlertCondition]
+    logic_operator: LogicOperator
+    severity: AlertSeverity
+    notification_channels: List[NotificationChannel]
+    created_at: datetime = field(default_factory=datetime.now)
+    
+    def to_dict(self) -> Dict:
+        """Convert to dictionary"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'conditions': [c.to_dict() for c in self.conditions],
+            'logic_operator': self.logic_operator.value,
+            'severity': self.severity.value,
+            'notification_channels': [ch.value for ch in self.notification_channels],
+            'created_at': self.created_at.isoformat()
+        }
+
+
+@dataclass
+class AlertRule:
+    """Active alert rule"""
+    id: str
+    template: AlertTemplate
+    symbol: str
+    enabled: bool
+    triggered_count: int = 0
+    last_triggered: Optional[datetime] = None
+    cooldown_minutes: int = 0
+    created_at: datetime = field(default_factory=datetime.now)
+    
+    def is_in_cooldown(self) -> bool:
+        """Check if rule is in cooldown period"""
+        if not self.last_triggered or self.cooldown_minutes == 0:
+            return False
+        
+        from datetime import timedelta
+        cooldown_end = self.last_triggered + timedelta(minutes=self.cooldown_minutes)
+        return datetime.now() < cooldown_end
+    
+    def to_dict(self) -> Dict:
+        """Convert to dictionary"""
+        return {
+            'id': self.id,
+            'template_id': self.template.id,
+            'symbol': self.symbol,
+            'enabled': self.enabled,
+            'triggered_count': self.triggered_count,
+            'last_triggered': self.last_triggered.isoformat() if self.last_triggered else None,
+            'cooldown_minutes': self.cooldown_minutes,
+            'created_at': self.created_at.isoformat()
+        }
+
+
+@dataclass
+class AlertEvent:
+    """Triggered alert event"""
+    id: str
+    rule_id: str
+    symbol: str
+    severity: AlertSeverity
+    message: str
+    triggered_at: datetime
+    triggered_values: Dict = field(default_factory=dict)
+    read: bool = False
+    acknowledged: bool = False
+    
+    def to_dict(self) -> Dict:
+        """Convert to dictionary"""
+        return {
+            'id': self.id,
+            'rule_id': self.rule_id,
+            'symbol': self.symbol,
+            'severity': self.severity.value,
+            'message': self.message,
+            'triggered_at': self.triggered_at.isoformat(),
+            'triggered_values': self.triggered_values,
+            'read': self.read,
+            'acknowledged': self.acknowledged
+        }
